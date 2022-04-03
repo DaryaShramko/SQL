@@ -1,8 +1,8 @@
--- 1. Òàáëèöà employees
+/* 1. Òàáëèöà employees
 Ñîçäàòü òàáëèöó employees
 - id. serial,  primary key,
 - employee_name. Varchar(50), not null
-Íàïîëíèòü òàáëèöó employee 70 ñòðîêàìè --
+Íàïîëíèòü òàáëèöó employee 70 ñòðîêàìè */
 
 
 CREATE TABLE employees195 (id SERIAL primary key, employee_name VARCHAR(50) not NULL ); 
