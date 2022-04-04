@@ -316,4 +316,303 @@ CREATE TABLE roles_eployee195 (id SERIAL primary key, employee_id INT not null u
 insert into roles_eployee195 (employee_id, role_id) values (1, 3), (2, 5), (3, 5), (7, 2), (20, 4), (9, 9), (5, 13), (23, 4), (11, 2), (10, 2), (22, 13), (21, 3), (34, 4), (6, 7), (36, 7), (39, 7), (41, 5), (46, 2), (43, 6), (47, 9), (50, 6), (55, 8), (60, 7), (62, 4), (65, 7), (63, 4), (51, 4), (45, 7), (52, 2), (53, 4), (56, 8), (66, 4), (25, 7), (29, 7), (31, 2), (26, 9), (27, 1), (42, 1), (38, 6); 
 insert into roles_eployee195 (employee_id, role_id) values (17, 2); 
 select * from roles_eployee195; 
+```
+
+# SQL HW3
+
+
+* 1. вывести всех работников чьи зарплаты в базе, вместе с зарплатами
+ 
+``` sql
+select employee_salary195.employee_id, employee_salary195.salary_id, salary195.monthly_salary from employee_salary195 
+inner join salary195 on employee_salary195.salary_id = salary195.id ;
+```
+
+* 2. вывести всех работников у которых ЗП меньше 2000 
+``` sql
+select employee_salary195.employee_id, employee_salary195.salary_id, salary195.monthly_salary from employee_salary195
+inner join salary195 on employee_salary195.salary_id = salary195.id
+where salary195.id < 11; 
+```
+
+* 3. вывести все зарплатные позиции но работник по ним не назначен (ЗП есть но непонятно кто ее получает)
+``` sql
+select  salary195.id, salary195.monthly_salary, employee_salary195.employee_id, employee_salary195.salary_id from salary195
+left join employee_salary195 on employee_salary195.salary_id = salary195.id
+where  employee_id is null ; 
 ``` 
+
+* 4. вывести все зарплатные позиции меньше 2000 но работник по ним не назначен. (ЗП есть, но непонятно кто ее получает)
+``` sql
+select  salary195.id, salary195.monthly_salary, employee_salary195.employee_id, employee_salary195.salary_id from salary195
+left join employee_salary195 on employee_salary195.salary_id = salary195.id
+where salary_id < 11 and employee_id is null ; 
+```
+
+* 5. Найти всех работников кому не начислена ЗП
+``` sql
+select  employees195.employee_name, employee_salary195.employee_id, employee_salary195.salary_id from employees195
+left join employee_salary195 on employees195.id = employee_salary195.employee_id
+where employee_id is null and salary_id is null; 
+```
+
+* 6. вывести всех работников с названиями должности 
+``` sql
+select  employees195.employee_name, roles_eployee195.employee_id, roles_eployee195.role_id from employees195
+left join roles_eployee195 on employees195.id = roles_eployee195.employee_id
+where employee_id is not null; 
+```
+
+* 7. вывести все имена и должность только Java разработчиков 
+``` sql
+select employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%Java%';
+```
+
+* 8. вывести имена и должность только Python разработчиков
+``` sql
+ select employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%Python%';
+```
+
+* 9. вывести имена и должность всех QA инженеров
+``` sql
+select employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%QA%';
+``` 
+
+* 10. вывести имена и должность всех ручных QA инженеров
+``` sql
+select employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%Manual%';
+```
+
+* 11. вывести имена и должность всех автоматизаторов QA 
+``` sql
+select employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%Automat%';
+```
+
+* 12. вывести имена и должность всех Junior специалистов
+``` sql
+select employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%Jun%';
+```
+
+* 13. вывести имена и зарплаты всех Junior специалистов
+``` sql
+ для создания запроса необходимо создать дополнительную таблицу, в которой будут присвоены зарплаты для каждой должности
+
+CREATE TABLE roles_salary195 (id SERIAL primary key, role_id INT not null, salary_id int not null, foreign key (role_id) references roles195 (id), foreign key (salary_id) references salary195 (id) ) ;
+
+insert into roles_salary195 (role_id, salary_id) values (1, 10), (2, 15), (3, 1), (4, 6), (5, 14), (6, 2), (7, 3), (8, 9), (9, 15), (10, 2), (11, 12), (13, 15), (14, 10), (15, 7), (16, 15), (17, 7), (18, 3), (19, 5), (20, 7); 
+select * from roles_salary195; 
+
+
+select employees195.employee_name, salary195.monthly_salary 
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+where role_name  like '%Junior%'; 
+```
+
+* 14. вывести все имена и зарплаты для Middle специалистов 
+``` sql
+select employees195.employee_name, salary195.monthly_salary 
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+where role_name  like '%Middle%'; 
+```
+
+* 15. вывести зарплаты Java разработчиков 
+``` sql
+select roles195.role_name, salary195.monthly_salary 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+where role_name  like '%Java%'; 
+```
+
+* 16. вывести зарплаты Python разработчиков 
+``` sql
+select roles195.role_name, salary195.monthly_salary 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+where role_name  like '%Python%';
+```
+
+* 17. вывести имена и зарплаты Junior Python разработчиков 
+``` sql
+select employees195.employee_name, salary195.monthly_salary 
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+where role_name  like '%Junior% %Python%'; 
+```
+
+* 18. вывести имена и зарплаты Middle JS разработчиков 
+``` sql
+select employees195.employee_name, salary195.monthly_salary 
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+where role_name  like '%Middle% %J%S%'; 
+```
+
+* 19. вывести имена и зарплаты Senior Java разработчиков
+``` sql
+select employees195.employee_name, salary195.monthly_salary 
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+where role_name  like '%Senior% %Java%'; 
+```
+
+* 20. вывести зарплаты Junior QA инженеров
+``` sql
+select roles195.role_name, salary195.monthly_salary 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+where role_name  like '%Junior% %QA%';
+```
+
+* 21. вывести среднюю зарплату всех Junior специалистов
+``` sql 
+select roles195.role_name, round(AVG(salary195.monthly_salary), 2) 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+group by role_name 
+Having role_name  like '%Junior%';
+```
+
+* 22. вывести сумму зарплат JS разработчиков
+``` sql
+select  sum(salary195.monthly_salary) as sum_salary_js 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+group by role_name 
+Having role_name  like '%J% %S%';
+```
+
+* 23. вывести минимальную зарплату QA инженеров
+``` sql
+select roles195.role_name, min(salary195.monthly_salary) as min_salary_qa 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+group by role_name 
+Having role_name  like '%QA%';
+```
+
+* 24. вывести максимальную зарплату QA инженеров
+``` sql
+select roles195.role_name, max(salary195.monthly_salary) as max_salary_qa 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+group by role_name 
+Having role_name  like '%QA%';
+```
+
+* 25. вывести количество QA инженеров
+``` sql
+select employees195.employee_name, roles195.role_name,  count(roles195.role_name)
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%QA%'
+group by employee_name, roles195.role_name;
+```
+
+* 26. вывести количество Middle специалистов
+``` sql
+select employees195.employee_name, roles195.role_name,  count(roles195.role_name)
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%Middle%'
+group by employee_name, roles195.role_name;
+``` 
+
+* 27. вывести количество разработчиков
+``` sql
+select employees195.employee_name, roles195.role_name,  count(roles195.role_name)
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles195 on roles195.id = roles_eployee195.role_id
+where role_name like '%develop%'
+group by employee_name, roles195.role_name;
+```
+
+* 28. вывести  фонд (сумму) зарплат разработчиков
+``` sql
+-- фонд на месяц
+
+select sum(salary195.monthly_salary) as sum_salary_developers 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+where role_name  like '%develop%'
+
+
+
+-- фонд на год 
+select  (sum(salary195.monthly_salary) * 12) as sum_salary_developers_year 
+from roles195 join roles_salary195 on roles_salary195.id = roles_salary195.id 
+join salary195 on roles_salary195.salary_id = salary195.id 
+where role_name  like '%develop%';
+``` 
+
+* 29. вывести имена, должности и ЗП всех специалистов по возрастанию 
+``` sql
+select salary195.monthly_salary, employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+order by salary195.monthly_salary, employees195.employee_name, roles195.role_name  ; 
+``` 
+
+* 30. вывести имена, должности и ЗП всех специалистов по возрастанию у которых ЗП от 1700 до 2300
+``` sql
+select salary195.monthly_salary, employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+where monthly_salary between 1700 and 2300
+order by salary195.monthly_salary, employees195.employee_name, roles195.role_name  ; 
+```
+
+* 31. вывести имена, должности и ЗП всех специалистов по возрастанию у которых ЗП меньше 2300
+``` sql
+select salary195.monthly_salary, employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+where monthly_salary < 2300
+order by salary195.monthly_salary, employees195.employee_name, roles195.role_name  ; 
+```
+
+* 32. вывести имена, должности и ЗП всех специалистов по возрастанию у которых ЗП равна 1100, 1500, 2300
+``` sql
+select salary195.monthly_salary, employees195.employee_name, roles195.role_name
+from employees195 join roles_eployee195 on employees195.id = roles_eployee195.employee_id 
+join roles_salary195 on roles_salary195.role_id = roles_eployee195.role_id
+join roles195 on roles_eployee195.role_id = roles195.id 
+join salary195 on roles_salary195.salary_id = salary195.id
+where monthly_salary = 1100 or monthly_salary = 1500 or monthly_salary = 2300
+order by salary195.monthly_salary, employees195.employee_name, roles195.role_name  ;
+```
